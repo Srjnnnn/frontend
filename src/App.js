@@ -1,24 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Container, Typography, Box, Tabs, Tab } from "@mui/material";
+import DocumentUpload from "./components/DocumentUpload";
+import QueryInterface from "./components/QueryInterface";
+
+function TabPanel({ children, value, index }) {
+  return (
+    <div hidden={value !== index}>
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
 
 function App() {
+  const [tabValue, setTabValue] = useState(0);
+  const [documentsUploaded, setDocumentsUploaded] = useState(false);
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="lg">
+      <Box sx={{ my: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom align="center">
+          Document Q&A & Web Search
+        </Typography>
+
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs value={tabValue} onChange={handleTabChange}>
+            <Tab label="Upload Documents" />
+            <Tab label="Ask Questions" />
+          </Tabs>
+        </Box>
+
+        <TabPanel value={tabValue} index={0}>
+          <DocumentUpload onUploadSuccess={() => setDocumentsUploaded(true)} />
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={1}>
+          <QueryInterface documentsAvailable={documentsUploaded} />
+        </TabPanel>
+      </Box>
+    </Container>
   );
 }
 
